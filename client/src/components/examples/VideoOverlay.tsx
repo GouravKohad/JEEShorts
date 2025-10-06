@@ -10,6 +10,7 @@ export default function VideoOverlayExample() {
         totalVideos={10}
         onNext={() => console.log('Next clicked')}
         onPrevious={() => console.log('Previous clicked')}
+        onShuffle={() => console.log('Shuffle clicked')}
         hasNext={true}
         hasPrevious={true}
       />

@@ -1,5 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ShortsViewer, { type Video } from "@/components/ShortsViewer";
+
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
 export default function Home() {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -9,13 +18,17 @@ export default function Home() {
     fetch('/videos.json')
       .then(res => res.json())
       .then(data => {
-        setVideos(data);
+        setVideos(shuffleArray(data));
         setIsLoading(false);
       })
       .catch(error => {
         console.error('Error loading videos:', error);
         setIsLoading(false);
       });
+  }, []);
+
+  const handleShuffle = useCallback(() => {
+    setVideos(prevVideos => shuffleArray(prevVideos));
   }, []);
 
   if (isLoading) {
@@ -29,5 +42,5 @@ export default function Home() {
     );
   }
 
-  return <ShortsViewer videos={videos} />;
+  return <ShortsViewer videos={videos} onShuffle={handleShuffle} />;
 }
