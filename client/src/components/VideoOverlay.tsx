@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface VideoOverlayProps {
@@ -8,6 +8,7 @@ interface VideoOverlayProps {
   totalVideos: number;
   onNext?: () => void;
   onPrevious?: () => void;
+  onShuffle?: () => void;
   hasNext: boolean;
   hasPrevious: boolean;
 }
@@ -19,6 +20,7 @@ export default function VideoOverlay({
   totalVideos,
   onNext,
   onPrevious,
+  onShuffle,
   hasNext,
   hasPrevious,
 }: VideoOverlayProps) {
@@ -55,6 +57,15 @@ export default function VideoOverlay({
           data-testid="button-previous-video"
         >
           <ChevronUp className="w-6 h-6" />
+        </Button>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="bg-black/30 hover:bg-black/50 text-white rounded-full backdrop-blur-sm"
+          onClick={onShuffle}
+          data-testid="button-shuffle"
+        >
+          <Shuffle className="w-5 h-5" />
         </Button>
         <Button
           size="icon"

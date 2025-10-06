@@ -10,9 +10,10 @@ export interface Video {
 
 interface ShortsViewerProps {
   videos: Video[];
+  onShuffle?: () => void;
 }
 
-export default function ShortsViewer({ videos }: ShortsViewerProps) {
+export default function ShortsViewer({ videos, onShuffle }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number>(0);
@@ -28,6 +29,13 @@ export default function ShortsViewer({ videos }: ShortsViewerProps) {
       setCurrentIndex(currentIndex - 1);
     }
   }, [videos, currentIndex]);
+
+  const handleShuffle = useCallback(() => {
+    setCurrentIndex(0);
+    if (onShuffle) {
+      onShuffle();
+    }
+  }, [onShuffle]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -94,6 +102,7 @@ export default function ShortsViewer({ videos }: ShortsViewerProps) {
         totalVideos={videos.length}
         onNext={handleNext}
         onPrevious={handlePrevious}
+        onShuffle={handleShuffle}
         hasNext={currentIndex < videos.length - 1}
         hasPrevious={currentIndex > 0}
       />
