@@ -1,42 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import VideoPlayer from "./VideoPlayer";
 import VideoOverlay from "./VideoOverlay";
-import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
 
-interface Video {
+export interface Video {
   id: string;
   title: string;
   channelTitle: string;
 }
 
 interface ShortsViewerProps {
-  playlistId: string;
-  onBack: () => void;
+  videos: Video[];
 }
 
-export default function ShortsViewer({ playlistId, onBack }: ShortsViewerProps) {
-  const [videos, setVideos] = useState<Video[]>([]);
+export default function ShortsViewer({ videos }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number>(0);
-
-  // TODO: remove mock functionality - Replace with real YouTube API
-  useEffect(() => {
-    const mockVideos: Video[] = [
-      { id: "dQw4w9WgXcQ", title: "Never Gonna Give You Up", channelTitle: "Rick Astley" },
-      { id: "9bZkp7q19f0", title: "PSY - GANGNAM STYLE", channelTitle: "officialpsy" },
-      { id: "kJQP7kiw5Fk", title: "Luis Fonsi - Despacito", channelTitle: "Luis Fonsi" },
-      { id: "fJ9rUzIMcZQ", title: "Queen - Bohemian Rhapsody", channelTitle: "Queen Official" },
-      { id: "3JZ_D3ELwOQ", title: "Ed Sheeran - Shape of You", channelTitle: "Ed Sheeran" },
-    ];
-    
-    setTimeout(() => {
-      setVideos(mockVideos);
-      setIsLoading(false);
-    }, 1000);
-  }, [playlistId]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -80,26 +59,11 @@ export default function ShortsViewer({ playlistId, onBack }: ShortsViewerProps) 
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-muted-foreground">Loading playlist...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (videos.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center space-y-4">
-          <p className="text-lg text-foreground">No videos found in this playlist</p>
-          <Button onClick={onBack} data-testid="button-back-home">
-            <Home className="w-4 h-4 mr-2" />
-            Back to Home
-          </Button>
+          <p className="text-lg text-foreground">No videos found</p>
         </div>
       </div>
     );
@@ -114,15 +78,6 @@ export default function ShortsViewer({ playlistId, onBack }: ShortsViewerProps) 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <Button
-        size="icon"
-        variant="ghost"
-        className="absolute top-4 left-4 z-30 bg-black/30 hover:bg-black/50 text-white rounded-full backdrop-blur-sm"
-        onClick={onBack}
-        data-testid="button-back"
-      >
-        <Home className="w-5 h-5" />
-      </Button>
 
       <div className="w-full h-full">
         <VideoPlayer
