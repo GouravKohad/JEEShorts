@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import VideoPlayer from "./VideoPlayer";
 import VideoOverlay from "./VideoOverlay";
 
@@ -17,6 +17,18 @@ export default function ShortsViewer({ videos }: ShortsViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number>(0);
 
+  const handleNext = useCallback(() => {
+    if (videos && currentIndex < videos.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  }, [videos, currentIndex]);
+
+  const handlePrevious = useCallback(() => {
+    if (videos && currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  }, [videos, currentIndex]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "ArrowRight") {
@@ -28,7 +40,7 @@ export default function ShortsViewer({ videos }: ShortsViewerProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, videos.length]);
+  }, [handleNext, handlePrevious]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
@@ -44,18 +56,6 @@ export default function ShortsViewer({ videos }: ShortsViewerProps) {
       } else {
         handlePrevious();
       }
-    }
-  };
-
-  const handleNext = () => {
-    if (currentIndex < videos.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
     }
   };
 
